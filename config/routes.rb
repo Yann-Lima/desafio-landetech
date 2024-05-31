@@ -1,10 +1,17 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # Rota de autenticação
+  post 'login', to: 'authentication#login'
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  namespace :recruiters do
+    resources :jobs
+  end
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  namespace :public do
+    resources :jobs, only: [:index, :show] do
+      resources :submissions, only: [:create]
+    end
+  end
+
+  # Rota raiz que retorna um JSON simples
+  root to: proc { [200, { 'Content-Type' => 'application/json' }, [{ message: 'Bem-vindo à API da minha aplicação!' }.to_json]] }
 end
