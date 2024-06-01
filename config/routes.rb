@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   post 'login', to: 'authentication#login'
 
   namespace :recruiters do
-    resources :jobs
+    resources :jobs, only: [:create]
   end
 
   namespace :public do

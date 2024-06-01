@@ -1,5 +1,8 @@
 module Public
   class JobsController < ApplicationController
+    # Pula a autorização para as ações públicas
+    skip_before_action :authorize_request, only: [:index, :show]
+
     # GET /public/jobs
     def index
       @jobs = Job.where(status: 'active')

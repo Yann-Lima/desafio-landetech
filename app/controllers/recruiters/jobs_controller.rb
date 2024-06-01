@@ -1,4 +1,3 @@
-# app/controllers/recruiters/jobs_controller.rb
 module Recruiters
   class JobsController < ApplicationController
     before_action :authorize_request

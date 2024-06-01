@@ -1,19 +1,19 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/jobs.yml
 
 one:
-  title: MyString
-  description: MyText
-  start_date: 2024-05-31
-  end_date: 2024-05-31
-  status: MyString
-  skills: MyString
+  title: Desenvolvedor Web
+  description: Desenvolvimento de aplicativos web utilizando Ruby on Rails.
+  start_date: '2024-06-01'
+  end_date: '2024-12-31'
+  status: ativo
+  skills: Ruby on Rails, JavaScript, HTML, CSS
   recruiter: one
 
 two:
-  title: MyString
-  description: MyText
-  start_date: 2024-05-31
-  end_date: 2024-05-31
-  status: MyString
-  skills: MyString
+  title: Designer Gráfico
+  description: Criação de materiais gráficos usando Adobe Photoshop e Illustrator.
+  start_date: '2024-06-15'
+  end_date: '2024-12-31'
+  status: ativo
+  skills: Adobe Photoshop, Adobe Illustrator
   recruiter: two

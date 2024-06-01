@@ -1,13 +1,16 @@
-# app/controllers/application_controller.rb
 class ApplicationController < ActionController::API
-  before_action :authorize_request
+  # Adicione as ações públicas reais aqui no except
+  before_action :authorize_request, except: [:index, :show]
 
+  private
+
+  # Método para autorizar a solicitação usando JWT
   def authorize_request
     header = request.headers['Authorization']
     header = header.split(' ').last if header
     begin
-      @decoded = JWT.decode(header, Rails.application.secrets.secret_key_base)[0]
-      @current_recruiter = Recruiter.find(@decoded["recruiter_id"])
+      @decoded = JsonWebToken.decode(header)
+      @current_recruiter = Recruiter.find(@decoded[:recruiter_id])
     rescue ActiveRecord::RecordNotFound => e
       render json: { errors: e.message }, status: :unauthorized
     rescue JWT::DecodeError => e
@@ -15,6 +18,7 @@ class ApplicationController < ActionController::API
     end
   end
 
+  # Método helper para acessar o current_recruiter
   def current_recruiter
     @current_recruiter
   end
