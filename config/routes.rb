@@ -1,17 +1,14 @@
 Rails.application.routes.draw do
-  # Rota de autenticação
-  post 'login', to: 'authentication#login'
+  resources :recruiters, only: [:create, :index, :show, :update, :destroy]
+  resources :jobs, only: [:create, :index, :show, :update, :destroy]
+  resources :submissions, only: [:create, :index, :show, :update, :destroy]
+  resources :recruiters
 
-  namespace :recruiters do
-    resources :jobs, only: [:create]
-  end
+  post 'login', to: 'sessions#create'
 
-  namespace :public do
-    resources :jobs, only: [:index, :show] do
-      resources :submissions, only: [:create]
-    end
-  end
-
-  # Rota raiz que retorna um JSON simples
-  root to: proc { [200, { 'Content-Type' => 'application/json' }, [{ message: 'Bem-vindo à API da minha aplicação!' }.to_json]] }
+  # Rotas para listagem de vagas ativas e busca de vagas
+  get 'jobs/active', to: 'jobs#active'
+  get 'jobs/search', to: 'jobs#search'
+  get 'jobs/:id', to: 'jobs#show'
+  post 'submissions', to: 'submissions#create'
 end

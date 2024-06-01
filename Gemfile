@@ -50,3 +50,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'jwt'
 
 gem 'bcrypt', '~> 3.1.7'
+
+group :development, :test do
+  gem 'rspec-rails'
+end

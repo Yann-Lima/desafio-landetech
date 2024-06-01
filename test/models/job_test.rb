@@ -1,7 +1,4 @@
-require "test_helper"
-
-class JobTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+test "should return true if job is active" do
+  job = Job.new(title: "Software Engineer", description: "Description", status: "active")
+  assert job.active?, "Job should be active"
 end
