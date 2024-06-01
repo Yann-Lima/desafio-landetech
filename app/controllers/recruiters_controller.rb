@@ -2,11 +2,18 @@ class RecruitersController < ApplicationController
   skip_before_action :authorize_request, only: [:create, :index, :show]
 
   def create
-    @recruiter = Recruiter.new(recruiter_params)
-    if @recruiter.save
-      render json: @recruiter, status: :created
+    existing_recruiter = Recruiter.find_by(email: recruiter_params[:email])
+
+    if existing_recruiter
+      render json: { error: 'Já existe um recrutador com esse e-mail.' }, status: :unprocessable_entity
     else
-      render json: @recruiter.errors, status: :unprocessable_entity
+      @recruiter = Recruiter.new(recruiter_params)
+      if @recruiter.save
+        token = JsonWebToken.encode(recruiter_id: @recruiter.id)
+        render json: { recruiter: @recruiter, token: token }, status: :created
+      else
+        render json: { errors: @recruiter.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 

@@ -1,5 +1,3 @@
-# app/models/recruiter.rb
-
 class Recruiter < ApplicationRecord
   # Associações
   has_many :jobs
