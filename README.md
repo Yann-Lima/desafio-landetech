@@ -17,8 +17,8 @@ git clone https://github.com/Yann-Lima/desafio-landetech.git
 
 Para testar este projeto, você precisará ter o seguinte instalado em sua máquina:
 
-- Ruby versão 2.7.2
-- Rails versão 6.0.0
+- Ruby versão 3.2.2
+- Rails versão 7.1.3
 - Postman (para testes de requisições HTTP)
 
 Após baixar o projeto do Git, siga as etapas abaixo para testá-lo:
