@@ -7,7 +7,7 @@ class Recruiter < ApplicationRecord
   # Validações
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
- # validates :password, presence: true , length: { minimum: 0 }
+  validates :password, presence: true, length: { minimum: 6 }, if: :password_digest_changed?
 
   # Método para autenticar um recrutador
   def self.authenticate(email, password)

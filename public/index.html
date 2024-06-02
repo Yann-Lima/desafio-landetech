@@ -336,15 +336,18 @@
         .then(response => response.json())
         .then(data => {
           if (data.token) {
+            debugger;
             // Armazena o token no localStorage
             localStorage.setItem('token', data.token);
             alert('Recrutador adicionado com sucesso!');
             loadRecruiters(); // Recarrega a lista de recrutadores após adicionar um novo
           } else {
-            return response.json();
+            debugger;
+            throw new Error(data.message || 'Erro ao adicionar recrutador');
           }
         })
         .catch(error => {
+          debugger;
           console.error('Erro ao adicionar recrutador:', error.message);
           alert('Erro ao adicionar recrutador. Por favor, verifique os dados e tente novamente.');
         });
