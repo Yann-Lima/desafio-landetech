@@ -17,6 +17,11 @@ class JobsController < ApplicationController
   def create
     recruiter_id = job_params[:recruiter_id]
 
+    unless Recruiter.exists?(recruiter_id)
+      render json: { error: 'Não foi localizado nenhum recrutador com este ID.' }, status: :unprocessable_entity
+      return
+    end
+
     if recruiter_id_already_exists?(recruiter_id)
       render json: { error: 'O ID do recrutador já está associado a um job existente.' }, status: :unprocessable_entity
     else

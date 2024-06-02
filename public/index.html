@@ -455,6 +455,12 @@
         });
     }
 
+    /*lista de jobs
+    // Função para limpar a mensagem de erro
+      function clearErrorMessage() {
+      const errorMessageElement = document.getElementById('errorMessages');
+      errorMessageElement.innerText = '';
+    }*/
     // Função para adicionar job
     document.getElementById('addJobForm').addEventListener('submit', event => {
       event.preventDefault();
@@ -487,7 +493,7 @@
         .catch(error => {
           console.error('Erro ao adicionar job:', error.message);
           const errorMessageElement = document.getElementById('errorMessages');
-          errorMessageElement.innerText = 'Já possui um recrutador concorrendo a uma vaga.';
+          errorMessageElement.innerText = 'Um usuario nao pode cadastrar duas vezes na mesma vaga ou o id do usuario não existe. Por favor revise seu pedido.';
         });
 
     });
