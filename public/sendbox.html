@@ -1,0 +1,81 @@
+<script>
+// Função para carregar jobs
+function loadJobs() {
+  fetch('http://localhost:3000/jobs')
+    .then(response => response.json())
+    .then(data => {
+      const jobsList = document.getElementById('jobsList');
+      jobsList.innerHTML = ''; // Limpa a lista anterior
+
+      data.forEach(job => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+        ID: ${job.id} | Título: ${job.title} | Descrição: ${job.description} | Data de Início: ${job.start_date} | Data de Término: ${job.end_date} | Status: ${job.status} | Habilidades: ${job.skills} | ID do Recrutador: ${job.recruiter_id}
+        <button class="deleteButton" onclick="deleteJob(${job.id})">Deletar</button>
+      `;
+        jobsList.appendChild(li);
+      });
+    })
+    .catch(error => {
+      console.error('Erro ao carregar jobs:', error);
+    });
+}
+// Função para adicionar job
+document.getElementById('addJobForm').addEventListener('submit', event => {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const jobData = Object.fromEntries(formData.entries());
+
+  // Envia a requisição para adicionar o job sem o cabeçalho de autorização
+  fetch('http://localhost:3000/jobs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ job: jobData })
+  })
+    .then(response => {
+      if (response.ok) {
+        alert('Job adicionado com sucesso!');
+        loadJobs();
+      } else {
+        throw new Error('Erro ao adicionar job');
+      }
+    })
+    .then(data => {
+      if (data && data.error) {
+        // Exibe a mensagem de erro retornada pelo servidor
+        document.getElementById('errorMessages').textContent = data.error;
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao adicionar job:', error.message);
+      const errorMessageElement = document.getElementById('errorMessages');
+      errorMessageElement.innerText = 'Um usuario nao pode cadastrar duas vezes na mesma vaga ou o id do usuario não existe. Por favor revise seu pedido.';
+    });
+
+});
+
+// Função para deletar job
+function deleteJob(id) {
+  fetch(`http://localhost:3000/jobs/${id}`, {
+    method: 'DELETE'
+  })
+    .then(response => {
+      if (response.ok) {
+        alert('Job excluído com sucesso!');
+        loadJobs(); // Recarrega a lista de jobs após a exclusão
+      } else {
+        throw new Error('Erro ao excluir job');
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao excluir job:', error.message);
+      alert('Erro ao excluir job. Por favor, tente novamente mais tarde.');
+    });
+}
+
+// Carrega os recrutadores ao carregar a página
+loadJobs();
+</script>

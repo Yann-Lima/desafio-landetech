@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_31_201110) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_02_161448) do
   create_table "jobs", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -33,10 +33,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_31_201110) do
   end
 
   create_table "submissions", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.string "mobile_phone"
-    t.text "resume"
+    t.string "nameCandidato"
+    t.string "emailCandidato"
+    t.string "phoneCandidato"
+    t.text "resumeCandidato"
     t.integer "job_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

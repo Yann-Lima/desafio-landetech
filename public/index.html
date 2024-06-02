@@ -280,8 +280,47 @@
   <h2>Jobs Cadastrados</h2>
   <ul id="jobsList"></ul>
 
+  <!--Formulário para adicionar dados do participante-->
+  <h2>Cadastrar candidato ao job</h2>
+  <form id="addCandidatoForm">
+    <label for="nameCandidato">Nome:</label>
+    <input type="text" id="nameCandidato" name="nameCandidato" required><br><br>
+    <label for="emailCandidato">Email:</label>
+    <input type="email" id="emailCandidato" name="emailCandidato" required><br><br>
+    <label for="phoneCandidato">Telefone:</label>
+    <input type="number" id="phoneCandidato" name="phoneCandidato" required><br><br>
+    <label for="resumeCandidato">Resume:</label>
+    <!--<input type="text" id="resumeCandidato" name="resumeCandidato" required><br><br>-->
+    <input type="file" id="resumeCandidato" name="resumeCandidato" required><br><br>
+    <label for="job_id">ID do Job:</label>
+    <input type="number" id="job_id" name="job_id" required><br><br>
+    <div id="errorMessagesCandidato" class="error-message"></div>
+    <button type="submit">Adicionar candidato</button>
+  </form>
+
+  <!-- Lista de Candidatos -->
+  <h2>Candidatos Cadastrados</h2>
+  <ul id="candidatoList"></ul>
+
+  <!-- Formulário para editar dados do participante (inicialmente escondido) -->
+  <form id="editCandidatoForm" style="display: none;">
+    <label for="editNameCandidato">Nome:</label>
+    <input type="text" id="editNameCandidato" name="editNameCandidato" required><br><br>
+    <label for="editEmailCandidato">Email:</label>
+    <input type="email" id="editEmailCandidato" name="editEmailCandidato" required><br><br>
+    <label for="editPhoneCandidato">Telefone:</label>
+    <input type="tel" id="editPhoneCandidato" name="editPhoneCandidato" required><br><br>
+    <label for="editresumeCandidato">Resume:</label>
+    <!--<input type="text" id="resumeCandidato" name="resumeCandidato" required><br><br>-->
+    <input type="file" id="editresumeCandidato" name="editresumeCandidato" required><br><br>
+    <label for="editjob_id">ID do Job:</label>
+    <input type="number" id="editjob_id" name="editjob_id" required><br><br>
+    <button type="submit">Atualizar candidato</button>
+    <button type="button" onclick="cancelEdit()">Cancelar</button>
+  </form>
+
   <!--Footer-->
-  <br/>
+  <br />
   <footer>
     <p style="text-align: center; color: #ffa500;">Criado e testado por Yann Lima.</p>
   </footer>
@@ -405,13 +444,13 @@
       form.style.display = 'none'; // Esconde o formulário de edição
     }
 
-
-
-
     // Função para deletar recrutador
     function deleteRecruiter(id) {
-      const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyZWNydWl0ZXJfaWQiOjUsImV4cCI6MTcxNzM0MjY5Nn0.gLh6PjgZtdRuiZOvnIkq88fWDpqs7OjkF8-dclAPXkU';
-
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Você precisa estar logado para realizar essa ação.');
+        return;
+      }
       fetch(`http://localhost:3000/recruiters/${id}`, {
         method: 'DELETE',
         headers: {
@@ -457,14 +496,6 @@
           console.error('Erro ao carregar jobs:', error);
         });
     }
-
-    /*lista de jobs
-    // Função para limpar a mensagem de erro
-      function clearErrorMessage() {
-      const errorMessageElement = document.getElementById('errorMessages');
-      errorMessageElement.innerText = '';
-    }*/
-    // Função para adicionar job
     document.getElementById('addJobForm').addEventListener('submit', event => {
       event.preventDefault();
 
@@ -522,6 +553,153 @@
 
     // Carrega os recrutadores ao carregar a página
     loadJobs();
+
+    //Candidatos
+    // Função para carregar candidatos
+    debugger;
+    function loadCandidatos() {
+      debugger;
+      fetch('http://localhost:3000/submissions')
+        .then(response => response.json())
+        .then(data => {
+          const candidatoList = document.getElementById('candidatoList');
+          candidatoList.innerHTML = ''; // Limpa a lista anterior
+
+          data.forEach(candidato => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+          ID: ${candidato.id} | Nome: ${candidato.nameCandidato} | Email: ${candidato.emailCandidato}
+          <button class="editButton" onclick="editCandidato(${candidato.id}, '${candidato.nameCandidato}', '${candidato.emailCandidato}', '${candidato.phoneCandidato}')">Editar</button>
+          <button class="deleteButton" onclick="deleteCandidato(${candidato.id})">Deletar</button>
+        `;
+            candidatoList.appendChild(li);
+          });
+        })
+        .catch(error => {
+          console.error('Erro ao carregar candidatos:', error);
+        });
+    }
+
+    // Função para adicionar candidato
+    debugger;
+    document.getElementById('addCandidatoForm').addEventListener('submit', event => {
+      event.preventDefault();
+
+      // Coleta os dados do formulário
+      const formData = new FormData(event.target);
+      const candidatoData = Object.fromEntries(formData.entries());
+
+      // Verifica se todos os campos obrigatórios estão preenchidos
+      if (!candidatoData.nameCandidato || !candidatoData.emailCandidato || !candidatoData.phoneCandidato || !candidatoData.resumeCandidato || !candidatoData.job_id) {
+        debugger;
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+      }
+
+      // Envia a requisição para adicionar o candidato
+      debugger;
+      fetch('http://localhost:3000/submissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ submission: candidatoData })
+      })
+        .then(response => {
+          if (response.ok) {
+            alert('Candidato adicionado com sucesso!');
+            loadCandidatos();
+          } else {
+            throw new Error('Erro ao adicionar candidato');
+          }
+        })
+        .then(data => {
+          if (data && data.error) {
+            // Exibe a mensagem de erro retornada pelo servidor
+            document.getElementById('errorMessages').textContent = data.error;
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao adicionar candidato catch:', error.message);
+          alert('Erro ao adicionar candidato. Por favor, verifique os dados e tente novamente.');
+        });
+    });
+
+    // Função para editar candidato
+    function editCandidato(id, name, email, phone) {
+      const form = document.getElementById('editCandidatoForm');
+      form.style.display = 'block'; // Exibe o formulário de edição
+      form.elements['editNameCandidato'].value = name; // Preenche o campo de nome com o valor atual
+      form.elements['editEmailCandidato'].value = email; // Preenche o campo de email com o valor atual
+      form.elements['editPhoneCandidato'].value = phone; // Preenche o campo de telefone com o valor atual
+      //form.elements['editjob_id'].value = number;
+      form.onsubmit = function (event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const newData = Object.fromEntries(formData.entries());
+        updateCandidato(id, newData);
+      }
+    }
+
+    // Função para atualizar candidato
+    function updateCandidato(id, newData) {
+      const requestBody = {
+        submission: newData // Garanta que os novos dados estejam dentro de um objeto com chave "submission"
+      };
+
+      fetch(`http://localhost:3000/submissions/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody) // Envie requestBody em vez de newData diretamente
+      })
+        .then(response => {
+          if (response.ok) {
+            alert('Candidato atualizado com sucesso!');
+            loadCandidatos();
+            cancelEdit(); // Esconde o formulário de edição após atualizar
+          } else {
+            throw new Error('Erro ao atualizar candidato');
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao atualizar candidato:', error.message);
+          alert('Erro ao atualizar candidato. Por favor, tente novamente mais tarde.');
+        });
+    }
+    // Função para cancelar edição
+function cancelEdit() {
+  const form = document.getElementById('editCandidatoForm');
+  form.style.display = 'none'; // Oculta o formulário de edição
+}
+
+
+    // Função para deletar candidato
+    function deleteCandidato(id) {
+      fetch(`http://localhost:3000/submissions/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            alert('Candidato excluído com sucesso!');
+            loadCandidatos(); // Recarrega a lista de candidatos após a exclusão
+          } else {
+            throw new Error('Erro ao excluir candidato');
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao excluir candidato:', error.message);
+          alert('Erro ao excluir candidato. Por favor, tente novamente mais tarde.');
+        });
+    }
+
+    // Carrega os candidatos ao carregar a página
+    loadCandidatos();
+
   </script>
 </body>
 

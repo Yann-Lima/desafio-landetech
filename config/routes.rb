@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   resources :recruiters, only: [:create, :index, :show, :update, :destroy]
   resources :jobs, only: [:create, :index, :show, :update, :destroy]
   resources :submissions, only: [:create, :index, :show, :update, :destroy]
-  resources :recruiters
+  #resources :recruiters
 
   post 'login', to: 'sessions#create'
 

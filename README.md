@@ -1,6 +1,7 @@
 # README
 
 Este é o README do projeto Desafio Landetech.
+Obs1: Todo e qualquer teste pode ser feito atraves do HTML que fiz para facilitar, da mesma forma que atraves do postman
 
 ## Como baixar o projeto do Git
 
