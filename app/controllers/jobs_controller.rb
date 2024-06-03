@@ -22,15 +22,11 @@ class JobsController < ApplicationController
       return
     end
 
-    if recruiter_id_already_exists?(recruiter_id)
-      render json: { error: 'O ID do recrutador já está associado a um job existente.' }, status: :unprocessable_entity
+    job = Job.new(job_params)
+    if job.save
+      render json: job, status: :created
     else
-      job = Job.new(job_params)
-      if job.save
-        render json: job, status: :created
-      else
-        render json: { error: job.errors }, status: :unprocessable_entity
-      end
+      render json: { error: job.errors }, status: :unprocessable_entity
     end
   end
 
@@ -51,16 +47,13 @@ class JobsController < ApplicationController
 
   private
 
-  def recruiter_id_already_exists?(recruiter_id)
-    Job.exists?(recruiter_id: recruiter_id)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_job
+    @job = Job.find(params[:id])
   end
-    # Use callbacks to share common setup or constraints between actions.
-    def set_job
-      @job = Job.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def job_params
-      params.require(:job).permit(:title, :description, :start_date, :end_date, :status, :skills, :recruiter_id, :recruiter_id_hidden)
-    end
+  # Only allow a list of trusted parameters through.
+  def job_params
+    params.require(:job).permit(:title, :description, :start_date, :end_date, :status, :skills, :recruiter_id, :recruiter_id_hidden)
+  end
 end

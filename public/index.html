@@ -290,7 +290,6 @@
     <label for="phoneCandidato">Telefone:</label>
     <input type="number" id="phoneCandidato" name="phoneCandidato" required><br><br>
     <label for="resumeCandidato">Resume:</label>
-    <!--<input type="text" id="resumeCandidato" name="resumeCandidato" required><br><br>-->
     <input type="file" id="resumeCandidato" name="resumeCandidato" required><br><br>
     <label for="job_id">ID do Job:</label>
     <input type="number" id="job_id" name="job_id" required><br><br>
@@ -309,7 +308,7 @@
     <label for="editEmailCandidato">Email:</label>
     <input type="email" id="editEmailCandidato" name="editEmailCandidato" required><br><br>
     <label for="editPhoneCandidato">Telefone:</label>
-    <input type="tel" id="editPhoneCandidato" name="editPhoneCandidato" required><br><br>
+    <input type="tel" id="editPhoneCandidato" name="editPhoneCandidato" required><br><br> 
     <label for="editresumeCandidato">Resume:</label>
     <!--<input type="text" id="resumeCandidato" name="resumeCandidato" required><br><br>-->
     <input type="file" id="editresumeCandidato" name="editresumeCandidato" required><br><br>
@@ -518,18 +517,6 @@
             throw new Error('Erro ao adicionar job');
           }
         })
-        .then(data => {
-          if (data && data.error) {
-            // Exibe a mensagem de erro retornada pelo servidor
-            document.getElementById('errorMessages').textContent = data.error;
-          }
-        })
-        .catch(error => {
-          console.error('Erro ao adicionar job:', error.message);
-          const errorMessageElement = document.getElementById('errorMessages');
-          errorMessageElement.innerText = 'Um usuario nao pode cadastrar duas vezes na mesma vaga ou o id do usuario não existe. Por favor revise seu pedido.';
-        });
-
     });
 
     // Função para deletar job
@@ -568,7 +555,7 @@
           data.forEach(candidato => {
             const li = document.createElement('li');
             li.innerHTML = `
-          ID: ${candidato.id} | Nome: ${candidato.nameCandidato} | Email: ${candidato.emailCandidato}
+          ID: ${candidato.id} | Nome: ${candidato.nameCandidato} | Email: ${candidato.emailCandidato} | Telefone: ${candidato.phoneCandidato} | Resume: ${candidato.resumeCandidato} | Id do Job: ${candidato.job_id}
           <button class="editButton" onclick="editCandidato(${candidato.id}, '${candidato.nameCandidato}', '${candidato.emailCandidato}', '${candidato.phoneCandidato}')">Editar</button>
           <button class="deleteButton" onclick="deleteCandidato(${candidato.id})">Deletar</button>
         `;
@@ -594,8 +581,7 @@
         debugger;
         alert('Por favor, preencha todos os campos obrigatórios.');
         return;
-      }
-
+      }   
       // Envia a requisição para adicionar o candidato
       debugger;
       fetch('http://localhost:3000/submissions', {
@@ -616,12 +602,13 @@
         .then(data => {
           if (data && data.error) {
             // Exibe a mensagem de erro retornada pelo servidor
-            document.getElementById('errorMessages').textContent = data.error;
+            document.getElementById('errorMessagesCandidato').textContent = data.error;
           }
         })
         .catch(error => {
-          console.error('Erro ao adicionar candidato catch:', error.message);
-          alert('Erro ao adicionar candidato. Por favor, verifique os dados e tente novamente.');
+          console.error('Erro ao adicionar job:', error.message);
+          const errorMessageElement = document.getElementById('errorMessagesCandidato');
+          errorMessageElement.innerText = 'Um usuario não pode cadastrar duas vezes na mesma vaga ou o id do usuario não existe. Por favor revise seu pedido.';
         });
     });
 
